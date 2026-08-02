@@ -8,6 +8,8 @@ import {
   listVersions,
 } from "@/lib/data/genesis";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Timeline",
   description: "Phylogeny of the Living UI main lineage and personal branches.",

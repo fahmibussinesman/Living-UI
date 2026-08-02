@@ -3,6 +3,8 @@ import { ExperienceShell } from "@/components/shell/experience-shell";
 import { getHead, getHeadVersion, listVersions, lockHead, setHead } from "@/lib/data/genesis";
 import { revalidatePath } from "next/cache";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Admin",
   description: "Internal Head controls (local bootstrap — protect in production).",

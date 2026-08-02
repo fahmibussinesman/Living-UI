@@ -3,6 +3,8 @@ import { ExperienceView } from "@/components/experience/experience-view";
 import { HeadRitual } from "@/components/experience/head-ritual";
 import { getHeadVersion, listMainPath } from "@/lib/data/genesis";
 
+export const dynamic = "force-dynamic";
+
 const WORLD_LABEL = {
   obsidian: "Obsidian Luxury",
   minimal: "Japanese Minimal",
