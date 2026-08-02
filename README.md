@@ -6,6 +6,10 @@ Collective-evolution frontend showcase. `/` always serves the **Head of Main** â
 
 [![CI](https://github.com/fahmibussinesman/Living-UI/actions/workflows/ci.yml/badge.svg)](https://github.com/fahmibussinesman/Living-UI/actions/workflows/ci.yml)
 
+## Live
+
+**https://living-ui.vercel.app**
+
 ## Quick start
 
 ```bash
