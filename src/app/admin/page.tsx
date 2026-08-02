@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import { ExperienceShell } from "@/components/shell/experience-shell";
 import {
   getHead,
@@ -15,16 +17,28 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Admin",
-  description: "Internal Head controls (protect before production).",
+  description: "Internal Head controls.",
 };
 
+async function authorize() {
+  const secret = process.env.ADMIN_SECRET;
+  if (!secret) return; // Open in dev if no secret configured
+  const h = await headers();
+  const token = h.get("x-admin-secret") || h.get("authorization");
+  if (token !== secret && token !== `Bearer ${secret}`) {
+    notFound();
+  }
+}
+
 export default async function AdminPage() {
+  await authorize();
   const head = await getHeadVersion();
   const lineage = await getHead();
   const versions = await listVersions();
 
   async function toggleLock() {
     "use server";
+    await authorize();
     const current = await getHead();
     await lockHead(!current.headLocked);
     revalidatePath("/");
@@ -34,6 +48,7 @@ export default async function AdminPage() {
 
   async function makeHead(formData: FormData) {
     "use server";
+    await authorize();
     const id = String(formData.get("versionId") ?? "");
     if (!id) return;
     try {
@@ -49,6 +64,7 @@ export default async function AdminPage() {
 
   async function runRecompute() {
     "use server";
+    await authorize();
     await recomputeHead();
     revalidatePath("/");
     revalidatePath("/admin");
@@ -57,6 +73,7 @@ export default async function AdminPage() {
 
   async function runReset() {
     "use server";
+    await authorize();
     await resetToGenesis();
     revalidatePath("/");
     revalidatePath("/admin");
