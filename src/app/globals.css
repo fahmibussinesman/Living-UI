@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+:root {
+  --lu-canvas: #0a0a0b;
+  --lu-surface: #141416;
+  --lu-surface-elevated: #1c1c1f;
+  --lu-border: #2a2a2e;
+  --lu-text: #f5f5f7;
+  --lu-text-muted: #9f9fa0;
+  --lu-text-soft: #6a6b6b;
+  --lu-accent: #847dff;
+  --lu-accent-fg: #0a0a0b;
+  --lu-inverse: #ffffff;
+  --lu-glow: rgba(132, 125, 255, 0.22);
+  --lu-radius: 16px;
+  --lu-radius-pill: 9999px;
+  --lu-shadow: none;
+  --lu-display-size: clamp(2.75rem, 8vw, 5.5rem);
+  --lu-display-lead: 0.95;
+  --lu-border-width: 0px;
+  --background: var(--lu-canvas);
+  --foreground: var(--lu-text);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--lu-canvas);
+  color: var(--lu-text);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--lu-accent);
+  color: var(--lu-accent-fg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--lu-accent);
+  outline-offset: 3px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}

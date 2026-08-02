@@ -1,0 +1,74 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { ExperienceShell } from "@/components/shell/experience-shell";
+import { getHeadVersion } from "@/lib/data/genesis";
+
+export const metadata: Metadata = {
+  title: "About",
+  description: "Mythos and engineering of Living UI.",
+};
+
+export default function AboutPage() {
+  const head = getHeadVersion();
+
+  return (
+    <ExperienceShell version={head}>
+      <article className="mx-auto max-w-2xl px-4 pb-32 pt-28 md:px-6">
+        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--lu-accent)]">
+          Mythos
+        </p>
+        <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl md:text-5xl">
+          Living UI
+        </h1>
+        <p className="mt-6 text-lg leading-relaxed text-[var(--lu-text-muted)]">
+          <strong className="font-medium text-[var(--lu-text)]">
+            One Visit. One Mutation.
+          </strong>{" "}
+          <strong className="font-medium text-[var(--lu-text)]">
+            Many Visits. One Head.
+          </strong>
+        </p>
+        <div className="prose-lu mt-10 space-y-6 text-[15px] leading-relaxed text-[var(--lu-text-muted)]">
+          <p>
+            Living UI is not a SaaS product and not a shadcn skin pack. It is a
+            high-fidelity frontend showcase built as a{" "}
+            <em className="text-[var(--lu-text)]">collective species of interface</em>.
+            The homepage always serves the Head of Main — the tip of a version
+            lineage shaped by curated spells and community pressure.
+          </p>
+          <p>
+            Mutations never accept raw CSS or JavaScript. Visitors cast named{" "}
+            <em className="text-[var(--lu-text)]">spells</em> that rewrite design
+            tokens inside art-directed visual worlds. Compatibility rules protect
+            quality. MVP evolution stays same-world as Head.
+          </p>
+          <p>
+            Stack: Next.js App Router, TypeScript strict, Tailwind, Motion, Zod,
+            Supabase-ready schema, Vercel Hobby constraints. Persistence is currently
+            in-memory for local bootstrap; Supabase migrations ship for production wiring.
+          </p>
+          <p>
+            Built as an open portfolio of craft: motion with intent, accessibility
+            with reduced-motion, performance without emptying the first paint of awe.
+          </p>
+        </div>
+        <div className="mt-12 flex flex-wrap gap-3">
+          <Link
+            href="/mutate"
+            className="rounded-full bg-[var(--lu-inverse)] px-5 py-2.5 text-sm text-[var(--lu-canvas)]"
+          >
+            Cast a spell
+          </Link>
+          <Link
+            href="https://github.com/fahmibussinesman/Living-UI"
+            className="rounded-full border border-[var(--lu-border)] px-5 py-2.5 text-sm"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GitHub
+          </Link>
+        </div>
+      </article>
+    </ExperienceShell>
+  );
+}
