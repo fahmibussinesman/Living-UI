@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ExperienceShell } from "@/components/shell/experience-shell";
-import { getHeadVersion } from "@/lib/data/genesis";
+import { getHeadVersion } from "@/lib/data/store";
 import { WORLD_DEFAULT_PALETTE } from "@/lib/tokens/palettes";
 import type { TokenSnapshot, WorldId } from "@/lib/tokens/types";
 import { tokensToCssVars, cssVarsToStyle } from "@/lib/tokens/css-vars";

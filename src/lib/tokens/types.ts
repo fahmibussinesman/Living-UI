@@ -35,6 +35,10 @@ export type VersionRecord = {
   branchKind: "main" | "personal";
   createdAt: string;
   label: string;
+  votesUp?: number;
+  votesDown?: number;
+  favorites?: number;
+  score?: number;
 };
 
 export type LineageHead = {

@@ -1,5 +1,5 @@
 import type { VersionRecord } from "@/lib/tokens/types";
-import { getHead } from "@/lib/data/genesis";
+import { getHead } from "@/lib/data/store";
 import { tokensToCssVars, cssVarsToStyle } from "@/lib/tokens/css-vars";
 import { LivingDock } from "@/components/shell/living-dock";
 import { VersionChip } from "@/components/shell/version-chip";

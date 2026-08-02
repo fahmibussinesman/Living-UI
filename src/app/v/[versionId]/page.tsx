@@ -3,8 +3,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ExperienceShell } from "@/components/shell/experience-shell";
 import { ExperienceView } from "@/components/experience/experience-view";
-import { getHeadVersion, getVersion } from "@/lib/data/genesis";
-import { proposeVersionAction } from "@/app/actions/mutation";
+import { VoteBar } from "@/components/version/vote-bar";
+import {
+  getHeadVersion,
+  getVersion,
+  getVisitorVote,
+  isFavorited,
+} from "@/lib/data/store";
+import { getOrCreateVisitorId } from "@/lib/visitor";
+
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,
@@ -14,9 +22,23 @@ export async function generateMetadata({
   const { versionId } = await params;
   const v = getVersion(versionId);
   if (!v) return { title: "Version" };
+  const title = v.label;
+  const description = `Living UI ${v.id} · generation ${v.generation}`;
+  const og = `/og?v=${encodeURIComponent(v.id)}`;
   return {
-    title: v.label,
-    description: `Living UI ${v.id} · generation ${v.generation}`,
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [{ url: og, width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [og],
+    },
   };
 }
 
@@ -30,40 +52,35 @@ export default async function VersionPage({
   if (!version) notFound();
   const head = getHeadVersion();
   const isHead = version.id === head.id;
+  const visitorId = await getOrCreateVisitorId();
 
   return (
     <ExperienceShell version={version}>
-      {!isHead ? (
-        <div className="fixed bottom-24 left-1/2 z-40 flex w-[min(100%-2rem,36rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-2 rounded-full border border-[var(--lu-border)] bg-[var(--lu-surface)]/95 px-4 py-2 text-xs backdrop-blur-md md:bottom-28">
-          <span className="text-[var(--lu-text-muted)]">
-            Branch view · not Head
-          </span>
-          <Link href="/" className="text-[var(--lu-accent)]">
+      <div className="fixed bottom-24 left-1/2 z-40 flex w-[min(100%-2rem,40rem)] -translate-x-1/2 flex-col items-center gap-2 md:bottom-28">
+        <div className="flex w-full flex-wrap items-center justify-center gap-2 rounded-2xl border border-[var(--lu-border)] bg-[var(--lu-surface)]/95 px-4 py-3 backdrop-blur-md">
+          {!isHead ? (
+            <span className="text-xs text-[var(--lu-text-muted)]">
+              Branch · not Head
+            </span>
+          ) : (
+            <span className="text-xs text-[var(--lu-accent)]">Head of Main</span>
+          )}
+          <Link href="/" className="text-xs text-[var(--lu-text)] underline">
             Open Head
           </Link>
           <Link
             href={`/compare?a=${head.id}&b=${version.id}`}
-            className="text-[var(--lu-text)]"
+            className="text-xs text-[var(--lu-text-muted)]"
           >
             Compare
           </Link>
-          {version.status === "personal" ? (
-            <form
-              action={async () => {
-                "use server";
-                await proposeVersionAction(version.id);
-              }}
-            >
-              <button
-                type="submit"
-                className="rounded-full bg-[var(--lu-inverse)] px-3 py-1 text-[var(--lu-canvas)]"
-              >
-                Propose to Main
-              </button>
-            </form>
-          ) : null}
+          <VoteBar
+            version={version}
+            visitorVote={getVisitorVote(visitorId, version.id)}
+            favorited={isFavorited(visitorId, version.id)}
+          />
         </div>
-      ) : null}
+      </div>
       <ExperienceView version={version} showMutateCta={isHead} />
     </ExperienceShell>
   );

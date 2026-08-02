@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ExperienceShell } from "@/components/shell/experience-shell";
 import { ExperienceView } from "@/components/experience/experience-view";
-import { getHeadVersion, getVersion } from "@/lib/data/genesis";
+import { getHeadVersion, getVersion } from "@/lib/data/store";
 import { tokensToCssVars, cssVarsToStyle } from "@/lib/tokens/css-vars";
 
 export const metadata: Metadata = {

@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 const COMMANDS = [
   { id: "head", label: "Open Head", href: "/", hint: "Collective reality" },
   { id: "mutate", label: "Cast a spell", href: "/mutate", hint: "One mutation" },
+  { id: "evolve", label: "Head race", href: "/evolve", hint: "Vote proposals" },
   { id: "timeline", label: "Timeline", href: "/timeline", hint: "Phylogeny" },
   { id: "compare", label: "Compare versions", href: "/compare", hint: "Before / after" },
   { id: "worlds", label: "World gallery", href: "/worlds", hint: "Art direction" },

@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ExperienceShell } from "@/components/shell/experience-shell";
+import { VoteBar } from "@/components/version/vote-bar";
 import {
   getHead,
   getHeadVersion,
+  getVisitorVote,
+  isFavorited,
   listMainPath,
   listVersions,
-} from "@/lib/data/genesis";
+} from "@/lib/data/store";
+import { getOrCreateVisitorId } from "@/lib/visitor";
 
 export const dynamic = "force-dynamic";
 
@@ -15,11 +19,12 @@ export const metadata: Metadata = {
   description: "Phylogeny of the Living UI main lineage and personal branches.",
 };
 
-export default function TimelinePage() {
+export default async function TimelinePage() {
   const head = getHeadVersion();
   const lineage = getHead();
   const mainPath = listMainPath();
   const all = listVersions();
+  const visitorId = await getOrCreateVisitorId();
 
   return (
     <ExperienceShell version={head}>
@@ -32,7 +37,11 @@ export default function TimelinePage() {
         </h1>
         <p className="mt-4 max-w-2xl text-[var(--lu-text-muted)]">
           Main spine from Genesis to Head
-          {lineage.headLocked ? " (locked)" : ""}. Personal branches appear below.
+          {lineage.headLocked ? " (locked)" : ""}. Vote on proposals in{" "}
+          <Link href="/evolve" className="text-[var(--lu-accent)] underline">
+            Evolve
+          </Link>
+          .
         </p>
 
         <ol className="mt-12 space-y-0 border-l border-[var(--lu-border)] pl-6">
@@ -51,6 +60,8 @@ export default function TimelinePage() {
                   Gen {v.generation}
                   {isHead ? " · Head" : ""}
                   {i === 0 ? " · Genesis" : ""}
+                  {" · score "}
+                  {(v.score ?? 0).toFixed(2)}
                 </p>
                 <Link
                   href={`/v/${v.id}`}
@@ -72,21 +83,31 @@ export default function TimelinePage() {
         </h2>
         <ul className="mt-6 divide-y divide-[var(--lu-border)] border-y border-[var(--lu-border)]">
           {all.map((v) => (
-            <li key={v.id} className="flex flex-wrap items-center justify-between gap-3 py-4">
+            <li key={v.id} className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <Link href={`/v/${v.id}`} className="text-[var(--lu-text)] hover:text-[var(--lu-accent)]">
+                <Link
+                  href={`/v/${v.id}`}
+                  className="text-[var(--lu-text)] hover:text-[var(--lu-accent)]"
+                >
                   {v.label}
                 </Link>
                 <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--lu-text-soft)]">
                   {v.id} · {v.status} · {v.branchKind}
                 </p>
               </div>
-              <Link
-                href={`/compare?a=${head.id}&b=${v.id}`}
-                className="text-xs uppercase tracking-[0.12em] text-[var(--lu-text-muted)] hover:text-[var(--lu-text)]"
-              >
-                Compare to Head
-              </Link>
+              <div className="flex flex-col items-start gap-2 sm:items-end">
+                <VoteBar
+                  version={v}
+                  visitorVote={getVisitorVote(visitorId, v.id)}
+                  favorited={isFavorited(visitorId, v.id)}
+                />
+                <Link
+                  href={`/compare?a=${head.id}&b=${v.id}`}
+                  className="text-xs uppercase tracking-[0.12em] text-[var(--lu-text-muted)] hover:text-[var(--lu-text)]"
+                >
+                  Compare to Head
+                </Link>
+              </div>
             </li>
           ))}
         </ul>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ExperienceShell } from "@/components/shell/experience-shell";
-import { getHeadVersion } from "@/lib/data/genesis";
+import { getHeadVersion } from "@/lib/data/store";
 
 export const metadata: Metadata = {
   title: "About",

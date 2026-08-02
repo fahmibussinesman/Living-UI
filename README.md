@@ -36,14 +36,25 @@ pnpm build
 | --- | --- |
 | `/` | Collective Head (cinematic Genesis) |
 | `/mutate` | Spell studio — preview → commit branch |
+| `/evolve` | Head race · vote / favorite proposals |
 | `/v/[id]` | Version deep link · propose to Main |
 | `/timeline` | Phylogeny spine |
 | `/compare?a=&b=` | Before / after |
 | `/worlds` | Art direction contracts |
 | `/about` | Mythos |
-| `/admin` | Head lock / promote (protect before prod) |
+| `/admin` | Head lock / promote / reset (protect before prod) |
+| `/og?v=` | Dynamic OG image |
 
 ⌘/Ctrl+K opens the command palette.
+
+## Collective evolution (local)
+
+1. Cast a spell on `/mutate` → personal branch  
+2. Open `/v/[id]` → **Propose to Main**  
+3. Vote on `/evolve` — highest windowed score becomes Head (unless locked)  
+4. Return later → “evolved while away” banner if Head shifted  
+
+Persistence: `.data/lineage.json` on local disk (gitignored). On Vercel Hobby without writable FS, state is per-instance memory until Supabase is wired.
 
 ## Product DNA
 

@@ -44,6 +44,13 @@ export const metadata: Metadata = {
     title: "Living UI",
     description: "One Visit. One Mutation. Many Visits. One Head.",
     type: "website",
+    images: [{ url: "/og", width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Living UI",
+    description: "One Visit. One Mutation. Many Visits. One Head.",
+    images: ["/og"],
   },
 };
 

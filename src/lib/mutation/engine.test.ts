@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GENESIS_TOKENS } from "@/lib/data/genesis";
+import { GENESIS_TOKENS } from "@/lib/data/store";
 import { applySpell, isSpellCompatible, getSpell } from "./spells";
 import { clampMotionForA11y, validateAndApplySpell } from "./engine";
 

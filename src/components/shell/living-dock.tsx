@@ -8,6 +8,7 @@ import {
   Layers,
   Sparkles,
   Timer,
+  Trophy,
   Wand2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -15,6 +16,7 @@ import { cn } from "@/lib/utils";
 const links = [
   { href: "/", label: "Head", icon: Sparkles },
   { href: "/mutate", label: "Mutate", icon: Wand2 },
+  { href: "/evolve", label: "Evolve", icon: Trophy },
   { href: "/timeline", label: "Timeline", icon: Timer },
   { href: "/worlds", label: "Worlds", icon: Layers },
   { href: "/compare", label: "Compare", icon: GitBranch },

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { ExperienceShell } from "@/components/shell/experience-shell";
 import { SpellStudio } from "@/components/mutate/spell-studio";
-import { getHeadVersion } from "@/lib/data/genesis";
+import { getHeadVersion } from "@/lib/data/store";
 
 export const dynamic = "force-dynamic";
 
