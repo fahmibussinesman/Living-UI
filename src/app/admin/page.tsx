@@ -84,10 +84,7 @@ export default async function AdminPage() {
   return (
     <ExperienceShell version={head}>
       <div className="mx-auto max-w-3xl px-4 pb-32 pt-28 md:px-6">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--lu-accent)]">
-          Internal
-        </p>
-        <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl">Admin</h1>
+        <h1 className="font-[family-name:var(--font-display)] text-4xl">Admin</h1>
         <p className="mt-3 text-sm text-[var(--lu-text-muted)]">
           File store or Supabase when env is set. Protect before public deploy.
         </p>

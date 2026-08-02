@@ -18,10 +18,7 @@ export default async function AboutPage() {
   return (
     <ExperienceShell version={head}>
       <article className="mx-auto max-w-2xl px-4 pb-32 pt-28 md:px-6">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--lu-accent)]">
-          Mythos
-        </p>
-        <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl md:text-5xl">
+        <h1 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl">
           Living UI
         </h1>
         <p className="mt-6 text-lg leading-relaxed text-[var(--lu-text-muted)]">

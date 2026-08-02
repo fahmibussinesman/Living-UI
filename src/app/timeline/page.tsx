@@ -38,10 +38,7 @@ export default async function TimelinePage() {
   return (
     <ExperienceShell version={head}>
       <div className="mx-auto max-w-4xl px-4 pb-32 pt-28 md:px-6">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--lu-accent)]">
-          Phylogeny
-        </p>
-        <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl text-[var(--lu-text)] md:text-5xl">
+        <h1 className="font-[family-name:var(--font-display)] text-4xl text-[var(--lu-text)] md:text-5xl">
           Timeline
         </h1>
         <p className="mt-4 max-w-2xl text-[var(--lu-text-muted)]">

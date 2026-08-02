@@ -95,9 +95,6 @@ export function ExperienceView({
     ) : t.heroLayout === "split" ? (
       <section className="grid min-h-[80vh] items-center gap-10 px-4 pb-28 pt-28 md:grid-cols-2 md:px-8 md:pb-32">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-[var(--lu-accent)]">
-            {WORLD_LABEL[t.world]} · {MODEL_LABEL[t.model]}
-          </p>
           <h1
             className={cn(displayClass, "mt-4")}
             style={{ lineHeight: "var(--lu-display-lead)" }}
@@ -146,9 +143,6 @@ export function ExperienceView({
     ) : t.heroLayout === "editorial" ? (
       <section className="grid min-h-[80vh] gap-8 px-4 pb-28 pt-28 md:grid-cols-12 md:px-8 md:pb-32">
         <div className="md:col-span-7">
-          <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-[var(--lu-accent)]">
-            Editorial · {WORLD_LABEL[t.world]}
-          </p>
           <h1
             className={cn(displayClass, "mt-6")}
             style={{ lineHeight: "var(--lu-display-lead)" }}
@@ -172,9 +166,6 @@ export function ExperienceView({
       </section>
     ) : (
       <section className="flex min-h-[80vh] flex-col justify-center px-4 pb-28 pt-28 md:px-8 md:pb-32">
-        <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-[var(--lu-accent)]">
-          {WORLD_LABEL[t.world]}
-        </p>
         <h1
           className={cn(displayClass, "mt-4 max-w-4xl")}
           style={{ lineHeight: "var(--lu-display-lead)" }}
@@ -265,12 +256,9 @@ export function ExperienceView({
       <section className="border-t border-[var(--lu-border)] px-4 py-20 md:px-8">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-8 md:flex-row md:items-end">
           <div>
-            <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--lu-accent)]">
-              Next move
-            </p>
             <h2
               className={cn(
-                "mt-3 max-w-xl text-3xl text-[var(--lu-text)] md:text-5xl",
+                "max-w-xl text-3xl text-[var(--lu-text)] md:text-5xl",
                 isBrutal
                   ? "font-[family-name:var(--font-monument)] uppercase"
                   : "font-[family-name:var(--font-display)]",

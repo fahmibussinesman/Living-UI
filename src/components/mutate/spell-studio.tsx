@@ -89,10 +89,7 @@ export function SpellStudio({
     <div className="mx-auto grid max-w-7xl gap-8 px-4 pb-32 pt-24 md:grid-cols-[minmax(0,22rem)_1fr] md:px-6">
       <aside className="space-y-6">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--lu-accent)]">
-            Mutation studio
-          </p>
-          <h1 className="mt-2 font-[family-name:var(--font-display)] text-3xl text-[var(--lu-text)] md:text-4xl">
+          <h1 className="font-[family-name:var(--font-display)] text-3xl text-[var(--lu-text)] md:text-4xl">
             Cast one spell
           </h1>
           <p className="mt-3 text-sm leading-relaxed text-[var(--lu-text-muted)]">

@@ -29,10 +29,7 @@ export default async function ComparePage({
     <ExperienceShell version={head} showChip={false}>
       <div className="px-4 pb-28 pt-20 md:px-6">
         <div className="mx-auto max-w-7xl">
-          <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--lu-accent)]">
-            Compare
-          </p>
-          <h1 className="mt-2 font-[family-name:var(--font-display)] text-4xl text-[var(--lu-text)]">
+          <h1 className="font-[family-name:var(--font-display)] text-4xl text-[var(--lu-text)]">
             Before / after
           </h1>
           <p className="mt-3 text-sm text-[var(--lu-text-muted)]">

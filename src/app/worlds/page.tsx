@@ -62,10 +62,7 @@ export default async function WorldsPage() {
   return (
     <ExperienceShell version={head}>
       <div className="mx-auto max-w-6xl px-4 pb-32 pt-28 md:px-6">
-        <p className="font-mono text-[11px] uppercase tracking-[0.2em] text-[var(--lu-accent)]">
-          Art direction
-        </p>
-        <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl md:text-5xl">
+        <h1 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl">
           Worlds
         </h1>
         <p className="mt-4 max-w-2xl text-[var(--lu-text-muted)]">
