@@ -1,20 +1,10 @@
--- Seed worlds/models/genesis + score columns for Living UI
+-- Seed worlds/models/genesis + score columns + text visitor/version ids
 
 alter table public.versions
   add column if not exists votes_up int not null default 0,
   add column if not exists votes_down int not null default 0,
   add column if not exists favorites_count int not null default 0,
   add column if not exists score double precision not null default 0;
-
--- Allow string ids for local/demo genesis (text ids)
--- If versions.id is uuid, we keep uuid and use fixed genesis uuid below.
--- For flexible demo ids, convert id columns to text when needed:
-
-do $$
-begin
-  -- no-op if already text; skip hard alter on production uuid setups
-  null;
-end $$;
 
 insert into public.visual_worlds (id, slug, name, config, is_active)
 values
@@ -34,36 +24,89 @@ insert into public.lineages (id, head_locked)
 values ('main', false)
 on conflict (id) do nothing;
 
--- Visitors use text id for cookie-based anon visitors
-alter table public.visitors alter column id type text using id::text;
+-- Convert visitor/version ids to text for cookie-based visitors and v-* branch ids.
+-- Drop FKs first, alter types, recreate FKs.
 
--- Votes/favorites visitor_id to text if needed
-do $$
-begin
-  alter table public.votes alter column visitor_id type text using visitor_id::text;
-exception when others then null;
-end $$;
+alter table public.versions drop constraint if exists versions_created_by_fkey;
+alter table public.versions drop constraint if exists versions_parent_id_fkey;
+alter table public.mutations drop constraint if exists mutations_version_id_fkey;
+alter table public.mutations drop constraint if exists mutations_parent_version_id_fkey;
+alter table public.mutations drop constraint if exists mutations_visitor_id_fkey;
+alter table public.votes drop constraint if exists votes_visitor_id_fkey;
+alter table public.votes drop constraint if exists votes_version_id_fkey;
+alter table public.favorites drop constraint if exists favorites_visitor_id_fkey;
+alter table public.favorites drop constraint if exists favorites_version_id_fkey;
+alter table public.lineages drop constraint if exists lineages_head_version_id_fkey;
+alter table public.lineages drop constraint if exists lineages_genesis_version_id_fkey;
 
-do $$
-begin
-  alter table public.favorites alter column visitor_id type text using visitor_id::text;
-exception when others then null;
-end $$;
+alter table public.visitors
+  alter column id type text using id::text;
 
--- Prefer text version ids for spell branches (v-...)
-do $$
-begin
-  alter table public.versions alter column id type text using id::text;
-  alter table public.versions alter column parent_id type text using parent_id::text;
-  alter table public.lineages alter column head_version_id type text using head_version_id::text;
-  alter table public.lineages alter column genesis_version_id type text using genesis_version_id::text;
-  alter table public.votes alter column version_id type text using version_id::text;
-  alter table public.favorites alter column version_id type text using version_id::text;
-  alter table public.mutations alter column version_id type text using version_id::text;
-  alter table public.mutations alter column parent_version_id type text using parent_version_id::text;
-exception when others then
-  raise notice 'id type alter skipped: %', sqlerrm;
-end $$;
+alter table public.versions
+  alter column id type text using id::text,
+  alter column parent_id type text using parent_id::text,
+  alter column created_by type text using created_by::text;
+
+alter table public.lineages
+  alter column head_version_id type text using head_version_id::text,
+  alter column genesis_version_id type text using genesis_version_id::text;
+
+alter table public.mutations
+  alter column version_id type text using version_id::text,
+  alter column parent_version_id type text using parent_version_id::text,
+  alter column visitor_id type text using visitor_id::text;
+
+alter table public.votes
+  alter column visitor_id type text using visitor_id::text,
+  alter column version_id type text using version_id::text;
+
+alter table public.favorites
+  alter column visitor_id type text using visitor_id::text,
+  alter column version_id type text using version_id::text;
+
+alter table public.versions
+  add constraint versions_parent_id_fkey
+  foreign key (parent_id) references public.versions(id);
+
+alter table public.versions
+  add constraint versions_created_by_fkey
+  foreign key (created_by) references public.visitors(id);
+
+alter table public.lineages
+  add constraint lineages_head_version_id_fkey
+  foreign key (head_version_id) references public.versions(id);
+
+alter table public.lineages
+  add constraint lineages_genesis_version_id_fkey
+  foreign key (genesis_version_id) references public.versions(id);
+
+alter table public.mutations
+  add constraint mutations_version_id_fkey
+  foreign key (version_id) references public.versions(id) on delete cascade;
+
+alter table public.mutations
+  add constraint mutations_parent_version_id_fkey
+  foreign key (parent_version_id) references public.versions(id);
+
+alter table public.mutations
+  add constraint mutations_visitor_id_fkey
+  foreign key (visitor_id) references public.visitors(id);
+
+alter table public.votes
+  add constraint votes_visitor_id_fkey
+  foreign key (visitor_id) references public.visitors(id) on delete cascade;
+
+alter table public.votes
+  add constraint votes_version_id_fkey
+  foreign key (version_id) references public.versions(id) on delete cascade;
+
+alter table public.favorites
+  add constraint favorites_visitor_id_fkey
+  foreign key (visitor_id) references public.visitors(id) on delete cascade;
+
+alter table public.favorites
+  add constraint favorites_version_id_fkey
+  foreign key (version_id) references public.versions(id) on delete cascade;
 
 insert into public.versions (
   id, parent_id, lineage_id, world_id, model_id, generation,
@@ -105,6 +148,3 @@ set
   genesis_version_id = 'v-genesis',
   updated_at = now()
 where id = 'main';
-
--- Public write policies for service role only; anon reads already set.
--- Service role bypasses RLS.

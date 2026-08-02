@@ -10,6 +10,8 @@ Collective-evolution frontend showcase. `/` always serves the **Head of Main** �
 
 **https://living-ui.vercel.app**
 
+Supabase Free · **Southeast Asia (Singapore)** · project `living-ui` (`mzxbvwcnsdbmuzznmvek`)
+
 ## Quick start
 
 ```bash
