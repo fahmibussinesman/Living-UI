@@ -1,10 +1,9 @@
 import { cookies } from "next/headers";
-import { ensureVisitor } from "@/lib/data/store";
+import { ensureVisitor } from "@/lib/data/repo";
 
 export const VISITOR_COOKIE = "lu_visitor";
 export const SEEN_HEAD_COOKIE = "lu_seen_head";
 
-/** Read visitor id (middleware seeds cookie). Register in store. */
 export async function getOrCreateVisitorId(): Promise<string> {
   const jar = await cookies();
   const existing = jar.get(VISITOR_COOKIE)?.value;

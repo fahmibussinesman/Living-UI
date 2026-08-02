@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { getHeadVersion, getVersion } from "@/lib/data/store";
+import { getHeadVersion, getVersion } from "@/lib/data/repo";
 import { PALETTES } from "@/lib/tokens/palettes";
 
 export const runtime = "nodejs";
@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("v");
-  const version = (id ? getVersion(id) : null) ?? getHeadVersion();
+  const version = (id ? await getVersion(id) : null) ?? (await getHeadVersion());
   const palette = PALETTES[version.tokens.palette];
 
   const world =

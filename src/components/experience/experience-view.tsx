@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { TokenSnapshot, VersionRecord } from "@/lib/tokens/types";
 import { cn } from "@/lib/utils";
+import { Reveal } from "@/components/experience/reveal";
 
 const WORLD_LABEL: Record<TokenSnapshot["world"], string> = {
   obsidian: "Obsidian Luxury",
@@ -200,50 +201,62 @@ export function ExperienceView({
 
       <section className="border-t border-[var(--lu-border)] px-4 py-16 md:px-8">
         <div className="mx-auto grid max-w-6xl gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {PROOF.map((item) => (
-            <div
-              key={item.k}
-              className={cn(cardClass, "rounded-[var(--lu-radius)]")}
-              style={{ borderWidth: "var(--lu-border-width)" }}
-            >
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--lu-text-soft)]">
-                {item.k}
-              </p>
-              <p
-                className={cn(
-                  "mt-3 text-4xl text-[var(--lu-text)]",
-                  isBrutal ? "font-[family-name:var(--font-monument)]" : "font-[family-name:var(--font-display)]",
-                )}
+          {PROOF.map((item, i) => (
+            <Reveal key={item.k} delay={i * 0.05} motionLevel={t.motion}>
+              <div
+                className={cn(cardClass, "rounded-[var(--lu-radius)]")}
+                style={{ borderWidth: "var(--lu-border-width)" }}
               >
-                {item.v}
-              </p>
-            </div>
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--lu-text-soft)]">
+                  {item.k}
+                </p>
+                <p
+                  className={cn(
+                    "mt-3 text-4xl text-[var(--lu-text)]",
+                    isBrutal
+                      ? "font-[family-name:var(--font-monument)]"
+                      : "font-[family-name:var(--font-display)]",
+                  )}
+                >
+                  {item.v}
+                </p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </section>
 
       <section className="px-4 py-16 md:px-8">
         <div className="mx-auto max-w-6xl">
-          <h2
-            className={cn(
-              "text-3xl text-[var(--lu-text)] md:text-4xl",
-              isBrutal
-                ? "font-[family-name:var(--font-monument)] uppercase"
-                : "font-[family-name:var(--font-display)]",
-            )}
-          >
-            {t.model === "museum" ? "Exhibits" : t.model === "landing" ? "Why it holds" : "Selected systems"}
-          </h2>
+          <Reveal motionLevel={t.motion}>
+            <h2
+              className={cn(
+                "text-3xl text-[var(--lu-text)] md:text-4xl",
+                isBrutal
+                  ? "font-[family-name:var(--font-monument)] uppercase"
+                  : "font-[family-name:var(--font-display)]",
+              )}
+            >
+              {t.model === "museum"
+                ? "Exhibits"
+                : t.model === "landing"
+                  ? "Why it holds"
+                  : "Selected systems"}
+            </h2>
+          </Reveal>
           <div className="mt-10 grid gap-4 md:grid-cols-2">
-            {GALLERY.map((g) => (
-              <article
-                key={g.title}
-                className={cn(cardClass, "rounded-[var(--lu-radius)]")}
-                style={{ borderWidth: "var(--lu-border-width)" }}
-              >
-                <h3 className="text-lg font-medium text-[var(--lu-text)]">{g.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-[var(--lu-text-muted)]">{g.body}</p>
-              </article>
+            {GALLERY.map((g, i) => (
+              <Reveal key={g.title} delay={0.04 + i * 0.05} motionLevel={t.motion}>
+                <article
+                  className={cn(cardClass, "rounded-[var(--lu-radius)] h-full")}
+                  style={{ borderWidth: "var(--lu-border-width)" }}
+                >
+                  <h3 className="text-lg font-medium text-[var(--lu-text)]">{g.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--lu-text-muted)]">
+                    {g.body}
+                  </p>
+                </article>
+              </Reveal>
             ))}
           </div>
         </div>

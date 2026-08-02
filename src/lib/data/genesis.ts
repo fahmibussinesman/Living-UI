@@ -1,4 +1,4 @@
-/** Public data API — file-backed store with in-memory fallback. */
+/** @deprecated Prefer `@/lib/data/repo` for async API. Re-exports for tests/local. */
 export {
   GENESIS_TOKENS,
   GENESIS_VERSION,

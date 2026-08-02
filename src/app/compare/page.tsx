@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ExperienceShell } from "@/components/shell/experience-shell";
 import { ExperienceView } from "@/components/experience/experience-view";
-import { getHeadVersion, getVersion } from "@/lib/data/store";
+import { getHeadVersion, getVersion } from "@/lib/data/repo";
 import { tokensToCssVars, cssVarsToStyle } from "@/lib/tokens/css-vars";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Compare",
@@ -16,9 +18,9 @@ export default async function ComparePage({
   searchParams: Promise<{ a?: string; b?: string }>;
 }) {
   const sp = await searchParams;
-  const head = getHeadVersion();
-  const a = (sp.a ? getVersion(sp.a) : null) ?? head;
-  const b = (sp.b ? getVersion(sp.b) : null) ?? head;
+  const head = await getHeadVersion();
+  const a = (sp.a ? await getVersion(sp.a) : null) ?? head;
+  const b = (sp.b ? await getVersion(sp.b) : null) ?? head;
 
   const styleA = cssVarsToStyle(tokensToCssVars(a.tokens));
   const styleB = cssVarsToStyle(tokensToCssVars(b.tokens));

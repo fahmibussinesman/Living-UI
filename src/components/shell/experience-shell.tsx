@@ -1,10 +1,10 @@
 import type { VersionRecord } from "@/lib/tokens/types";
-import { getHead } from "@/lib/data/store";
+import { getHead } from "@/lib/data/repo";
 import { tokensToCssVars, cssVarsToStyle } from "@/lib/tokens/css-vars";
 import { LivingDock } from "@/components/shell/living-dock";
 import { VersionChip } from "@/components/shell/version-chip";
 
-export function ExperienceShell({
+export async function ExperienceShell({
   version,
   children,
   showChip = true,
@@ -13,7 +13,7 @@ export function ExperienceShell({
   children: React.ReactNode;
   showChip?: boolean;
 }) {
-  const head = getHead();
+  const head = await getHead();
   const style = cssVarsToStyle(tokensToCssVars(version.tokens));
 
   return (
@@ -22,6 +22,7 @@ export function ExperienceShell({
       style={style}
       data-world={version.tokens.world}
       data-model={version.tokens.model}
+      data-motion={version.tokens.motion}
     >
       {showChip ? (
         <VersionChip version={version} headLocked={head.headLocked} />

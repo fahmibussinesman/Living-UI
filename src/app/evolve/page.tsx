@@ -8,7 +8,7 @@ import {
   isFavorited,
   listProposals,
   listVersions,
-} from "@/lib/data/store";
+} from "@/lib/data/repo";
 import { getOrCreateVisitorId } from "@/lib/visitor";
 
 export const dynamic = "force-dynamic";
@@ -19,15 +19,24 @@ export const metadata: Metadata = {
 };
 
 export default async function EvolvePage() {
-  const head = getHeadVersion();
+  const head = await getHeadVersion();
   const visitorId = await getOrCreateVisitorId();
-  const proposals = listProposals();
-  const ranked = listVersions().filter(
+  const proposals = await listProposals();
+  const ranked = (await listVersions()).filter(
     (v) =>
       v.status === "proposed" ||
       v.status === "featured" ||
       v.status === "genesis",
   );
+
+  const voteState = await Promise.all(
+    ranked.map(async (v) => ({
+      id: v.id,
+      vote: await getVisitorVote(visitorId, v.id),
+      fav: await isFavorited(visitorId, v.id),
+    })),
+  );
+  const voteMap = new Map(voteState.map((x) => [x.id, x]));
 
   return (
     <ExperienceShell version={head}>
@@ -49,32 +58,35 @@ export default async function EvolvePage() {
 
         <h2 className="mt-12 text-xl text-[var(--lu-text)]">Leaderboard</h2>
         <ul className="mt-6 space-y-4">
-          {ranked.map((v, i) => (
-            <li
-              key={v.id}
-              className="rounded-[var(--lu-radius)] border border-[var(--lu-border)] bg-[var(--lu-surface)] p-4"
-            >
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--lu-text-soft)]">
-                    #{i + 1} · Gen {v.generation} · {v.status}
-                    {v.id === head.id ? " · HEAD" : ""}
-                  </p>
-                  <Link
-                    href={`/v/${v.id}`}
-                    className="mt-1 block text-lg text-[var(--lu-text)] hover:text-[var(--lu-accent)]"
-                  >
-                    {v.label}
-                  </Link>
+          {ranked.map((v, i) => {
+            const st = voteMap.get(v.id);
+            return (
+              <li
+                key={v.id}
+                className="rounded-[var(--lu-radius)] border border-[var(--lu-border)] bg-[var(--lu-surface)] p-4"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[var(--lu-text-soft)]">
+                      #{i + 1} · Gen {v.generation} · {v.status}
+                      {v.id === head.id ? " · HEAD" : ""}
+                    </p>
+                    <Link
+                      href={`/v/${v.id}`}
+                      className="mt-1 block text-lg text-[var(--lu-text)] hover:text-[var(--lu-accent)]"
+                    >
+                      {v.label}
+                    </Link>
+                  </div>
+                  <VoteBar
+                    version={v}
+                    visitorVote={st?.vote ?? 0}
+                    favorited={st?.fav ?? false}
+                  />
                 </div>
-                <VoteBar
-                  version={v}
-                  visitorVote={getVisitorVote(visitorId, v.id)}
-                  favorited={isFavorited(visitorId, v.id)}
-                />
-              </div>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
 
         {proposals.length === 0 ? (

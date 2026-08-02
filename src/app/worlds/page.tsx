@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ExperienceShell } from "@/components/shell/experience-shell";
-import { getHeadVersion } from "@/lib/data/store";
+import { getHeadVersion } from "@/lib/data/repo";
 import { WORLD_DEFAULT_PALETTE } from "@/lib/tokens/palettes";
 import type { TokenSnapshot, WorldId } from "@/lib/tokens/types";
 import { tokensToCssVars, cssVarsToStyle } from "@/lib/tokens/css-vars";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Worlds",
@@ -54,8 +56,8 @@ function sampleTokens(world: WorldId): TokenSnapshot {
   };
 }
 
-export default function WorldsPage() {
-  const head = getHeadVersion();
+export default async function WorldsPage() {
+  const head = await getHeadVersion();
 
   return (
     <ExperienceShell version={head}>
@@ -114,8 +116,7 @@ export default function WorldsPage() {
         </div>
 
         <p className="mt-10 text-sm text-[var(--lu-text-muted)]">
-          Models (Creative Portfolio, Product Landing, Digital Museum) share slots; worlds
-          rewrite tokens and motion recipes.{" "}
+          Models share slots; worlds rewrite tokens and motion recipes.{" "}
           <Link href="/mutate" className="text-[var(--lu-accent)] underline">
             Cast a spell
           </Link>

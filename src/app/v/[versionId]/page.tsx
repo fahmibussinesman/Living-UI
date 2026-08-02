@@ -9,7 +9,7 @@ import {
   getVersion,
   getVisitorVote,
   isFavorited,
-} from "@/lib/data/store";
+} from "@/lib/data/repo";
 import { getOrCreateVisitorId } from "@/lib/visitor";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +20,7 @@ export async function generateMetadata({
   params: Promise<{ versionId: string }>;
 }): Promise<Metadata> {
   const { versionId } = await params;
-  const v = getVersion(versionId);
+  const v = await getVersion(versionId);
   if (!v) return { title: "Version" };
   const title = v.label;
   const description = `Living UI ${v.id} · generation ${v.generation}`;
@@ -48,11 +48,13 @@ export default async function VersionPage({
   params: Promise<{ versionId: string }>;
 }) {
   const { versionId } = await params;
-  const version = getVersion(versionId);
+  const version = await getVersion(versionId);
   if (!version) notFound();
-  const head = getHeadVersion();
+  const head = await getHeadVersion();
   const isHead = version.id === head.id;
   const visitorId = await getOrCreateVisitorId();
+  const visitorVote = await getVisitorVote(visitorId, version.id);
+  const favorited = await isFavorited(visitorId, version.id);
 
   return (
     <ExperienceShell version={version}>
@@ -76,8 +78,8 @@ export default async function VersionPage({
           </Link>
           <VoteBar
             version={version}
-            visitorVote={getVisitorVote(visitorId, version.id)}
-            favorited={isFavorited(visitorId, version.id)}
+            visitorVote={visitorVote}
+            favorited={favorited}
           />
         </div>
       </div>

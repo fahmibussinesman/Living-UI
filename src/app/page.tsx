@@ -2,7 +2,7 @@ import { ExperienceShell } from "@/components/shell/experience-shell";
 import { ExperienceView } from "@/components/experience/experience-view";
 import { HeadRitual } from "@/components/experience/head-ritual";
 import { EvolvedBanner } from "@/components/shell/evolved-banner";
-import { getHeadVersion, listMainPath } from "@/lib/data/store";
+import { getHeadVersion, listMainPath } from "@/lib/data/repo";
 import { readSeenHeadId } from "@/lib/visitor";
 
 export const dynamic = "force-dynamic";
@@ -14,8 +14,8 @@ const WORLD_LABEL = {
 } as const;
 
 export default async function HomePage() {
-  const head = getHeadVersion();
-  const path = listMainPath();
+  const head = await getHeadVersion();
+  const path = await listMainPath();
   const spellPath = path
     .map((v) => v.spellLabel)
     .filter((x): x is string => Boolean(x));

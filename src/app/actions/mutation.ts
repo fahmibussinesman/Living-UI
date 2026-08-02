@@ -13,7 +13,7 @@ import {
   getVersion,
   proposeVersion,
   toggleFavorite,
-} from "@/lib/data/store";
+} from "@/lib/data/repo";
 import { SEEN_HEAD_COOKIE, VISITOR_COOKIE } from "@/lib/visitor";
 
 export type ActionResult =
@@ -23,7 +23,7 @@ export type ActionResult =
 async function bindVisitorCookie(): Promise<string> {
   const jar = await cookies();
   const existing = jar.get(VISITOR_COOKIE)?.value;
-  const id = ensureVisitor(existing);
+  const id = await ensureVisitor(existing);
   jar.set(VISITOR_COOKIE, id, {
     httpOnly: true,
     sameSite: "lax",
@@ -52,7 +52,7 @@ export async function commitSpellAction(
 
   await bindVisitorCookie();
 
-  const parent = getVersion(parsed.data.parentVersionId);
+  const parent = await getVersion(parsed.data.parentVersionId);
   if (!parent) {
     return { ok: false, reason: "Parent version not found." };
   }
@@ -66,7 +66,7 @@ export async function commitSpellAction(
   }
 
   try {
-    const version = commitPersonalBranch({
+    const version = await commitPersonalBranch({
       parentId: parent.id,
       tokens: applied.tokens,
       spellId: applied.spell.id,
@@ -96,7 +96,7 @@ export async function proposeVersionAction(
 ): Promise<ActionResult> {
   try {
     await bindVisitorCookie();
-    const version = proposeVersion(versionId);
+    const version = await proposeVersion(versionId);
     revalidateLineage(version.id);
     return {
       ok: true,
@@ -120,7 +120,7 @@ export async function voteAction(
 ): Promise<ActionResult> {
   try {
     const visitorId = await bindVisitorCookie();
-    const version = castVote({ visitorId, versionId, value });
+    const version = await castVote({ visitorId, versionId, value });
     revalidateLineage(version.id);
     return {
       ok: true,
@@ -143,7 +143,7 @@ export async function favoriteAction(
 ): Promise<ActionResult> {
   try {
     const visitorId = await bindVisitorCookie();
-    const version = toggleFavorite({ visitorId, versionId });
+    const version = await toggleFavorite({ visitorId, versionId });
     revalidateLineage(version.id);
     return {
       ok: true,

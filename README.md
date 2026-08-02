@@ -2,22 +2,14 @@
 
 **One Visit. One Mutation. · Many Visits. One Head.**
 
-Collective-evolution frontend showcase. The homepage is the **Head of Main** — a version lineage shaped by curated **spells** (token mutations), art-directed **worlds**, and (when wired) community votes.
+Collective-evolution frontend showcase. `/` always serves the **Head of Main** — a version lineage shaped by curated **spells**, art-directed **worlds**, and community votes.
 
-Live concept: high-fidelity portfolio of UI engineering — not a SaaS, not a random theme toy.
-
-## Stack
-
-- Next.js 16 (App Router) · TypeScript strict · Tailwind CSS v4
-- Motion · Zod · Zustand-ready · Vitest
-- Supabase schema ready (Auth / Postgres / RLS) · Vercel Hobby
-- Local bootstrap uses **in-memory lineage** until Supabase env is set
+[![CI](https://github.com/fahmibussinesman/Living-UI/actions/workflows/ci.yml/badge.svg)](https://github.com/fahmibussinesman/Living-UI/actions/workflows/ci.yml)
 
 ## Quick start
 
 ```bash
-# Node >= 20.9 required (fnm recommended)
-fnm use 22
+fnm use 22          # Node >= 20.9
 pnpm install
 pnpm dev
 ```
@@ -25,79 +17,93 @@ pnpm dev
 Open [http://localhost:3000](http://localhost:3000).
 
 ```bash
-pnpm test
-pnpm lint
-pnpm build
+pnpm test && pnpm typecheck && pnpm lint && pnpm build
 ```
 
-## Core routes
+## Demo loop
+
+1. `/` — cinematic Genesis Head (Obsidian × Portfolio)
+2. `/mutate` — cast a whitelist **spell**, preview, commit personal branch
+3. `/v/[id]` — **Propose to Main** · vote · favorite
+4. `/evolve` — Head race leaderboard (score elects Head unless locked)
+5. Return later — “evolved while away” if Head shifted
+6. `/admin` — lock / promote / recompute / reset (protect in prod)
+
+⌘/Ctrl+K command palette.
+
+## Stack
+
+| Layer | Choice |
+| --- | --- |
+| Framework | Next.js 16 App Router · React 19 · TS strict |
+| Style | Tailwind CSS v4 · CSS variables per world |
+| Motion | `motion` + reduced-motion clamps |
+| Validation | Zod |
+| Data | File store (local) **or** Supabase when env set |
+| Deploy | Vercel Hobby |
+
+## Routes
 
 | Route | Role |
 | --- | --- |
-| `/` | Collective Head (cinematic Genesis) |
-| `/mutate` | Spell studio — preview → commit branch |
-| `/evolve` | Head race · vote / favorite proposals |
-| `/v/[id]` | Version deep link · propose to Main |
-| `/timeline` | Phylogeny spine |
+| `/` | Collective Head |
+| `/mutate` | Spell studio |
+| `/evolve` | Head race |
+| `/v/[id]` | Version + OG |
+| `/timeline` | Phylogeny |
 | `/compare?a=&b=` | Before / after |
 | `/worlds` | Art direction contracts |
 | `/about` | Mythos |
-| `/admin` | Head lock / promote / reset (protect before prod) |
+| `/admin` | Head controls |
 | `/og?v=` | Dynamic OG image |
 
-⌘/Ctrl+K opens the command palette.
-
-## Collective evolution (local)
-
-1. Cast a spell on `/mutate` → personal branch  
-2. Open `/v/[id]` → **Propose to Main**  
-3. Vote on `/evolve` — highest windowed score becomes Head (unless locked)  
-4. Return later → “evolved while away” banner if Head shifted  
-
-Persistence: `.data/lineage.json` on local disk (gitignored). On Vercel Hobby without writable FS, state is per-instance memory until Supabase is wired.
-
-## Product DNA
-
-- **Worlds (MVP):** Obsidian Luxury · Japanese Minimal · Neo Brutalism
-- **Models:** Creative Portfolio · Product Landing · Digital Museum
-- **Spells:** whitelist token patches with compatibility rules
-- **MVP rule:** same-world evolution only (no cross-world Head speciation yet)
-- See `PRODUCT.md` and `DESIGN.md`
-
-## Architecture (MVP)
+## Architecture
 
 ```
 src/
-  app/                 # routes + server actions
+  app/                 routes + server actions + OG
   components/
-    experience/        # Head ritual + slot experience
-    mutate/            # spell studio
-    shell/             # dock, chip, command palette
+    experience/        Head ritual, reveal, slot UI
+    mutate/            spell studio
+    shell/             dock, chip, command palette
+    version/           vote bar
   lib/
-    data/genesis.ts    # in-memory lineage store
-    mutation/          # spells + engine + tests
-    tokens/            # palettes + CSS vars
-supabase/migrations/   # production schema
+    data/              repo (Supabase | file store)
+    mutation/          spells + engine + tests
+    tokens/            palettes + CSS vars
+    supabase/          client helpers
+supabase/migrations/   schema + seed
 ```
 
-## Supabase / Vercel
+`lib/data/repo.ts` is the single entry: uses Supabase when `NEXT_PUBLIC_SUPABASE_URL` + key exist, else `.data/lineage.json`.
 
-1. Create Supabase Free project → run `supabase/migrations/20260802000000_living_ui_init.sql`
-2. Copy `.env.example` → `.env.local` and fill keys
-3. `vercel` link + env (Hobby)
-4. Replace in-memory store with RPC-backed repository (Phase 4)
+## Supabase setup (production multi-instance)
 
-## Scripts
+1. Create Supabase Free project  
+2. SQL Editor → run in order:
+   - `supabase/migrations/20260802000000_living_ui_init.sql`
+   - `supabase/migrations/20260802000001_seed_and_score_columns.sql`
+3. Copy project URL + **service role** key into Vercel env (server writes)
+4. Also set `NEXT_PUBLIC_SUPABASE_URL` + `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
-| Command | Description |
+Without Supabase on Vercel, lineage is **per-instance memory** (fine for visual demo, not collective truth).
+
+## Worlds (MVP)
+
+| World | Signature |
 | --- | --- |
-| `pnpm dev` | Dev server |
-| `pnpm build` | Production build |
-| `pnpm start` | Start production server |
-| `pnpm lint` | ESLint |
-| `pnpm test` | Vitest unit tests |
-| `pnpm typecheck` | `tsc --noEmit` |
+| Obsidian Luxury | Void, monument type, one voltage accent |
+| Japanese Minimal | Ma, quiet scale, one bookmark |
+| Neo Brutalism | Condensed monument, ember punctuation, sharp |
+
+**Same-world Head evolution only** in MVP.
+
+## Docs
+
+- `PRODUCT.md` — product contract  
+- `DESIGN.md` — visual / motion rules  
+- `CONTRIBUTING.md` — contributor guide  
 
 ## License
 
-MIT — portfolio / open showcase.
+MIT

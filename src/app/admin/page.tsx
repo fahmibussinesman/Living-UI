@@ -8,7 +8,7 @@ import {
   recomputeHead,
   resetToGenesis,
   setHead,
-} from "@/lib/data/store";
+} from "@/lib/data/repo";
 import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
@@ -18,14 +18,15 @@ export const metadata: Metadata = {
   description: "Internal Head controls (protect before production).",
 };
 
-export default function AdminPage() {
-  const head = getHeadVersion();
-  const lineage = getHead();
-  const versions = listVersions();
+export default async function AdminPage() {
+  const head = await getHeadVersion();
+  const lineage = await getHead();
+  const versions = await listVersions();
 
   async function toggleLock() {
     "use server";
-    lockHead(!getHead().headLocked);
+    const current = await getHead();
+    await lockHead(!current.headLocked);
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/evolve");
@@ -36,7 +37,7 @@ export default function AdminPage() {
     const id = String(formData.get("versionId") ?? "");
     if (!id) return;
     try {
-      setHead(id, { force: true });
+      await setHead(id, { force: true });
       revalidatePath("/");
       revalidatePath("/admin");
       revalidatePath("/timeline");
@@ -48,7 +49,7 @@ export default function AdminPage() {
 
   async function runRecompute() {
     "use server";
-    recomputeHead();
+    await recomputeHead();
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/evolve");
@@ -56,7 +57,7 @@ export default function AdminPage() {
 
   async function runReset() {
     "use server";
-    resetToGenesis();
+    await resetToGenesis();
     revalidatePath("/");
     revalidatePath("/admin");
     revalidatePath("/timeline");
@@ -71,7 +72,7 @@ export default function AdminPage() {
         </p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-4xl">Admin</h1>
         <p className="mt-3 text-sm text-[var(--lu-text-muted)]">
-          Local/file-backed controls. Add Auth allowlist before public deploy.
+          File store or Supabase when env is set. Protect before public deploy.
         </p>
 
         <div className="mt-10 space-y-4 rounded-[var(--lu-radius)] border border-[var(--lu-border)] bg-[var(--lu-surface)] p-6">
